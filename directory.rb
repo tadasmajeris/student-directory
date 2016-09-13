@@ -17,12 +17,20 @@ def print_header
   puts "-------------"
 end
 
-def print(students, first_letter = '')
-  if !first_letter.empty?
+def print(students, args = {})
+  first_letter = args[:first_letter]
+  name_length = args[:name_length]
+  if first_letter
     students.select! do |student|
       student[:name][0].downcase == first_letter.downcase
     end
   end
+  if name_length
+    students.select! do |student|
+      student[:name].length < name_length
+    end
+  end
+
   students.each_with_index do |student, i|
     puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
@@ -50,5 +58,5 @@ end
 
 students = input_students
 print_header
-print(students, 'd')
+print(students, {first_letter: 'd', name_length: 12})
 print_footer(students)
