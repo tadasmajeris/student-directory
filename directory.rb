@@ -31,7 +31,10 @@ def print(students, args = {})
     end
   end
 
-  students.each_with_index do |student, i|
+  i = 0
+  while !students.empty? do
+    student = students.shift
+    i += 1
     puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort)"
   end
 end
@@ -56,7 +59,7 @@ def input_students
   students
 end
 
-students = input_students
+# students = input_students
 print_header
 print(students, {first_letter: 'd', name_length: 12})
 print_footer(students)
