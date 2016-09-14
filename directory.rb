@@ -2,14 +2,14 @@
 #   {name: "Dr. Hannibal Lecter", cohort: :november,
 #     hobbies: ['puzzles', 'eating humans'],
 #     country: 'America', height: 1.7 },
-#   {name: "Darth Vader", cohort: :november, hobbies: ['universe', 'red lightsabers'], height: 2},
+#   {name: "Darth Vader", cohort: :september, hobbies: ['universe', 'red lightsabers'], height: 2},
 #   {name: "Nurse Ratched", cohort: :november},
 #   {name: "Michael Corleone", cohort: :november},
-#   {name: "Alex DeLarge", cohort: :november},
+#   {name: "Alex DeLarge", cohort: :september},
 #   {name: "The Wicked Witch of the West", cohort: :november, country: "Lithuania"},
-#   {name: "Terminator", cohort: :november},
+#   {name: "Terminator", cohort: :january},
 #   {name: "Freddy Krueger", cohort: :november},
-#   {name: "The Joker", cohort: :november},
+#   {name: "The Joker", cohort: :january},
 #   {name: "Joffrey Baratheon", cohort: :november},
 #   {name: "Norman Bates", cohort: :november}
 # ]
@@ -69,12 +69,7 @@ def select_by_arguments(students, args)
   students
 end
 
-def print(students, args = {})
-
-  students  = select_by_arguments(students, args)
-  max_chars = find_max_chars(students)
-  print_table_header(students, max_chars)
-
+def print_students(students, max_chars)
   i = 0
   while students.count > 0
     student = students.shift
@@ -87,6 +82,25 @@ def print(students, args = {})
     end
     puts
   end
+  puts
+end
+
+def print_students_by_cohorts(students, max_chars)
+  cohorts = []
+  students.each do |student|
+    cohorts << student[:cohort] if !cohorts.include?(student[:cohort])
+  end
+  cohorts.each do |cohort|
+    cohort_students = students.select { |student| student[:cohort] == cohort }
+    print_students(cohort_students, max_chars)
+  end
+end
+
+def print(students, args = {})
+  students  = select_by_arguments(students, args)
+  max_chars = find_max_chars(students)
+  print_table_header(students, max_chars)
+  print_students_by_cohorts(students, max_chars)
   print_line
 end
 
