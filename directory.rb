@@ -105,7 +105,7 @@ def print(students, args = {})
 end
 
 def print_footer(names)
-  puts "Overall, we have #{names.count} great students"
+  puts "Overall, we have #{names.count} great student#{'s' if names.count>1}"
   puts
 end
 
@@ -138,7 +138,7 @@ def input_students
                   hobbies: hobbies, height: height,
                   country: country }
 
-    puts "Now we have #{students.count} students"
+    puts "Now we have #{students.count} student#{'s' if students.count>1}"
     puts
     puts "Enter the name of student No.#{students.count+1} (or hit return to finish)"
     name = gets.chomp
