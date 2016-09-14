@@ -149,7 +149,7 @@ end
 
 ######## PROGRAM ########
 students = input_students
-if students.count > 0
+if students.count > 0 # dont print empty list
   print_header
   print(students, {name_length: 30})
   print_footer(students)
