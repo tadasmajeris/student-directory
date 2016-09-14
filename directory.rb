@@ -113,26 +113,26 @@ def input_students
   students = []
   puts
   puts "Enter the name of student No.1"
-  name = gets.chomp.strip
+  name = gets.delete("\r\n").strip
 
   while !name.empty? do
     puts "Enter student's cohort:"
-    cohort = gets.chomp.strip.downcase
+    cohort = gets.delete("\r\n").strip.downcase
     cohort = (cohort == '') ? :november : cohort.to_sym
 
     hobbies = []
     puts "Enter student's hobbies: (to finish, hit return twice)"
-    hobby = gets.chomp.strip
+    hobby = gets.delete("\r\n").strip
     while !hobby.empty? do
       hobbies << hobby
-      hobby = gets.chomp.strip
+      hobby = gets.delete("\r\n").strip
     end
 
     puts "Enter student's country:"
-    country = gets.chomp.strip.capitalize
+    country = gets.delete("\r\n").strip.capitalize
 
     puts "Enter student's height:"
-    height = gets.chomp.strip
+    height = gets.delete("\r\n").strip
 
     students << { name: name, cohort: cohort,
                   hobbies: hobbies, height: height,
@@ -141,7 +141,7 @@ def input_students
     puts "Now we have #{students.count} student#{'s' if students.count>1}"
     puts
     puts "Enter the name of student No.#{students.count+1} (or hit return to finish)"
-    name = gets.chomp
+    name = gets.delete("\r\n")
   end
 
   students
