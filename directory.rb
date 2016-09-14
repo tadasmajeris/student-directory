@@ -28,7 +28,7 @@ def print_table_header(students, max_chars)
   if students.count > 0
     $stdout.print 'No. '
     students.first.keys.each do |key|
-      $stdout.print key.to_s.center(max_chars[key])
+      $stdout.print key.to_s.capitalize.center(max_chars[key])
     end
     puts
     print_line
@@ -43,7 +43,7 @@ def find_max_chars(students)
     student.each do |k, v|
       key_length = k.to_s.length
       value_length = ((v.is_a? Array) ? v.join(', ') : v.to_s).length
-      current_max = (key_length > value_length) ? key_length : value_length + 2
+      current_max = (key_length > value_length ? key_length : value_length) + 2
       if (max_chars[k] == nil) || (current_max > max_chars[k])
         max_chars[k] = current_max
       end
@@ -99,24 +99,28 @@ def input_students
   students = []
   puts
   puts "Enter the name of student No.1"
-  name = gets.chomp
+  name = gets.chomp.strip
 
   while !name.empty? do
+    puts "Enter student's cohort:"
+    cohort = gets.chomp.strip.downcase
+    cohort = (cohort == '') ? :november : cohort.to_sym
+
     hobbies = []
     puts "Enter student's hobbies: (to finish, hit return twice)"
-    hobby = gets.chomp
+    hobby = gets.chomp.strip
     while !hobby.empty? do
       hobbies << hobby
-      hobby = gets.chomp
+      hobby = gets.chomp.strip
     end
 
     puts "Enter student's country:"
-    country = gets.chomp
+    country = gets.chomp.strip.capitalize
 
     puts "Enter student's height:"
-    height = gets.chomp
+    height = gets.chomp.strip
 
-    students << { name: name, cohort: :november,
+    students << { name: name, cohort: cohort,
                   hobbies: hobbies, height: height,
                   country: country }
 
