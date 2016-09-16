@@ -183,7 +183,7 @@ def save_students
     end
 
     file.close
-    puts "Students saved!"
+    puts "Students saved!" #
   else
     print_no_students
   end
@@ -199,7 +199,7 @@ def load_students(filename="students.csv")
       add_student(name, cohort, hobbies, country, height)
     end
     file.close
-    puts "Students loaded!"
+    puts "Students loaded!" #
   else
     puts "ERROR: file #{filename} not found!"
   end
