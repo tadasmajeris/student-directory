@@ -200,7 +200,7 @@ end
 
 def try_load_students
   filename = ARGV.first # first argument from the command line
-  return if filename.nil?
+  return false if filename.nil?
   if File.exist?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} students from #{filename}"
@@ -244,5 +244,5 @@ def interactive_menu
 end
 
 ######## PROGRAM ########
-try_load_students
+load_students if !try_load_students
 interactive_menu
