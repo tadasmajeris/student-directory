@@ -160,13 +160,40 @@ def input_students
   end
 end
 
+def print_no_students
+  puts "No students..\n\n"
+end
+
 def show_students
   if @students.count > 0 # dont print empty list
     print_header
     print_students_list({name_length: 30})
     print_footer
   else
-    puts "No students..\n\n"
+    print_no_students
+  end
+end
+
+def save_students
+  if @students.count > 0
+    # open the file for writing
+    file = File.open("students.csv", "w")
+
+    @students.each do |student|
+      student_data = []
+      # not every student will have all keys, max_chars will
+      @max_chars.keys.each do |k|
+        value = student[k]
+        student_data << (value.is_a?(Array)? value.join('/') : value)
+      end
+      csv_line = student_data.join(',')
+      file.puts csv_line
+    end
+
+    file.close
+    puts "Students saved!"
+  else
+    print_no_students
   end
 end
 
@@ -174,6 +201,7 @@ def print_menu
   print_line
   puts "1. Input the students"
   puts "2. Show the students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -183,6 +211,8 @@ def process(selection)
     input_students
   when "2"
     show_students
+  when "3"
+    save_students
   when "9"
     exit
   else
