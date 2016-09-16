@@ -137,13 +137,17 @@ def input_students
     country = get_student_country
     height  = get_student_height
 
-    @students << {  name:    name,    cohort: cohort,
-                    hobbies: hobbies, height: height,
-                    country: country                    }
+    add_student(name, cohort, hobbies, country, height)
 
     puts "Now we have #{@students.count} student#{'s' if @students.count>1}\n\n"
     name = get_student_name
   end
+end
+
+def add_student(name, cohort, hobbies, country, height)
+  @students << {  name:    name,    cohort: cohort.to_sym,
+                  hobbies: hobbies, height: height,
+                  country: country                    }
 end
 
 def print_no_students
@@ -188,9 +192,7 @@ def load_students(filename="students.csv")
   file.readlines.each do |line|
     name, cohort, hobbies_text, height, country = line.chomp.split(',')
     hobbies = hobbies_text.split('/')
-    @students << {  name:    name,    cohort: cohort.to_sym,
-                    hobbies: hobbies, height: height,
-                    country: country                    }
+    add_student(name, cohort, hobbies, country, height)
   end
   file.close
   puts "Students loaded!"
