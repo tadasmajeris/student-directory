@@ -1,18 +1,4 @@
-# @students = [
-#   {name: "Dr. Hannibal Lecter", cohort: :november,
-#     hobbies: ['puzzles', 'eating humans'],
-#     country: 'America', height: 1.7 },
-#   {name: "Darth Vader", cohort: :september, hobbies: ['universe', 'red lightsabers'], height: 2},
-#   {name: "Nurse Ratched", cohort: :november},
-#   {name: "Michael Corleone", cohort: :november},
-#   {name: "Alex DeLarge", cohort: :september},
-#   {name: "The Wicked Witch of the West", cohort: :november, country: "Lithuania"},
-#   {name: "Terminator", cohort: :january},
-#   {name: "Freddy Krueger", cohort: :november},
-#   {name: "The Joker", cohort: :january},
-#   {name: "Joffrey Baratheon", cohort: :november},
-#   {name: "Norman Bates", cohort: :november}
-# ]
+# program that can load, save, input and print students data
 @students = []
 @max_chars = {}
 
@@ -111,34 +97,34 @@ end
 
 def get_student_name
   puts "Enter the name of student No.#{@students.count+1} (or hit return to finish)"
-  gets.delete("\r\n").strip
+  $stdin.gets.delete("\r\n").strip
 end
 
 def get_student_cohort
   puts "Enter student's cohort:"
-  cohort = gets.delete("\r\n").strip.downcase
+  cohort = $stdin.gets.delete("\r\n").strip.downcase
   cohort = (cohort == '') ? :november : cohort.to_sym
 end
 
 def get_student_hobbies
   hobbies = []
   puts "Enter student's hobbies: (to finish, hit return twice)"
-  hobby = gets.delete("\r\n").strip
+  hobby = $stdin.gets.delete("\r\n").strip
   while !hobby.empty? do
     hobbies << hobby
-    hobby = gets.delete("\r\n").strip
+    hobby = $stdin.gets.delete("\r\n").strip
   end
   hobbies
 end
 
 def get_student_height
   puts "Enter student's height:"
-  gets.delete("\r\n").strip
+  $stdin.gets.delete("\r\n").strip
 end
 
 def get_student_country
   puts "Enter student's country:"
-  gets.delete("\r\n").strip.capitalize
+  $stdin.gets.delete("\r\n").strip.capitalize
 end
 
 def input_students
@@ -197,8 +183,8 @@ def save_students
   end
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename="students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, hobbies_text, height, country = line.chomp.split(',')
     hobbies = hobbies_text.split('/')
@@ -208,6 +194,18 @@ def load_students
   end
   file.close
   puts "Students loaded!"
+end
+
+def try_load_students
+  filename = ARGV.first # first argument from the command line
+  return if filename.nil?
+  if File.exist?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} students from #{filename}"
+  else
+    puts "Sorry, #{filename} doesn't exist."
+    exit
+  end
 end
 
 def print_menu
@@ -239,9 +237,10 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp.strip)
+    process($stdin.gets.chomp.strip)
   end
 end
 
 ######## PROGRAM ########
+try_load_students
 interactive_menu
