@@ -61,11 +61,8 @@ def print_students(students)
     student = students.shift
     i += 1
     $stdout.print "#{i}. ".ljust(4)
-    # print students hobbies, country, height, etc
-    @max_chars.keys.each do |k|
-      v = student[k]
-      $stdout.print (v.is_a?(Array)? v.join(', ') : v).to_s.center(@max_chars[k])
-    end
+    student_data = get_student_data(student)
+    student_data.each { |k, v| $stdout.print  v.to_s.center(@max_chars[k]) }
     puts
   end
 end
@@ -164,19 +161,24 @@ def show_students
   end
 end
 
+def get_student_data(student)
+  student_data = {}
+  # not every student will have all keys, max_chars will
+  @max_chars.keys.each do |k|
+    value = student[k]
+    student_data[k] = (value.is_a?(Array)? value.join('/') : value)
+  end
+  student_data
+end
+
 def save_students
   if @students.count > 0
     # open the file for writing
     file = File.open("students.csv", "w")
 
     @students.each do |student|
-      student_data = []
-      # not every student will have all keys, max_chars will
-      @max_chars.keys.each do |k|
-        value = student[k]
-        student_data << (value.is_a?(Array)? value.join('/') : value)
-      end
-      csv_line = student_data.join(',')
+      student_data = get_student_data(student)
+      csv_line = student_data.values.join(',')
       file.puts csv_line
     end
 
@@ -188,14 +190,19 @@ def save_students
 end
 
 def load_students(filename="students.csv")
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, hobbies_text, height, country = line.chomp.split(',')
-    hobbies = hobbies_text.split('/')
-    add_student(name, cohort, hobbies, country, height)
+  if File.exist?(filename)
+    @students = []
+    file = File.open(filename, "r")
+    file.readlines.each do |line|
+      name, cohort, hobbies_text, height, country = line.chomp.split(',')
+      hobbies = hobbies_text.split('/')
+      add_student(name, cohort, hobbies, country, height)
+    end
+    file.close
+    puts "Students loaded!"
+  else
+    puts "ERROR: file #{filename} not found!"
   end
-  file.close
-  puts "Students loaded!"
 end
 
 def try_load_students
