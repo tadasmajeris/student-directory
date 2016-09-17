@@ -182,16 +182,13 @@ def save_students(saving_type = :default)
   filename = (saving_type == :new) ? get_filename : DEFAULT_FILENAME
 
   if @students.count > 0
-    # open the file for writing
-    file = File.open(filename, "w")
-
-    @students.each do |student|
-      student_data = get_student_data(student)
-      csv_line = student_data.values.join(',')
-      file.puts csv_line
+    File.open(filename, "w") do |file|
+      @students.each do |student|
+        student_data = get_student_data(student)
+        csv_line = student_data.values.join(',')
+        file.puts csv_line
+      end
     end
-
-    file.close
     puts "Students saved!" #
   else
     print_no_students
@@ -203,13 +200,13 @@ def load_students(loading_type = :default)
 
   if File.exist?(filename)
     @students = []
-    file = File.open(filename, "r")
-    file.readlines.each do |line|
-      name, cohort, hobbies_text, height, country = line.chomp.split(',')
-      hobbies = hobbies_text.split('/')
-      add_student(name, cohort, hobbies, country, height)
+    File.open(filename, "r") do |file|
+      file.readlines.each do |line|
+        name, cohort, hobbies_text, height, country = line.chomp.split(',')
+        hobbies = hobbies_text.split('/')
+        add_student(name, cohort, hobbies, country, height)
+      end
     end
-    file.close
     puts "Students loaded!" #
   else
     puts "ERROR: file #{filename} not found!"
