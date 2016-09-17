@@ -1,4 +1,6 @@
 # program that can load, save, input and print students data
+require 'csv'
+
 @students = []
 @max_chars = {}
 DEFAULT_FILENAME = "students.csv"
@@ -135,14 +137,16 @@ def input_students
     country = get_student_country
     height  = get_student_height
 
-    add_student(name, cohort, hobbies, country, height)
+    add_student([name, cohort, hobbies, country, height])
 
     puts "Now we have #{@students.count} student#{'s' if @students.count>1}\n\n"
     name = get_student_name
   end
 end
 
-def add_student(name, cohort, hobbies, country, height)
+def add_student(text_data)
+  name, cohort, hobbies, country, height = text_data
+  hobbies = hobbies.split('/') if hobbies.is_a?(String)
   @students << {  name:    name,    cohort: cohort.to_sym,
                   hobbies: hobbies, height: height,
                   country: country                    }
@@ -182,11 +186,9 @@ def save_students(saving_type = :default)
   filename = (saving_type == :new) ? get_filename : DEFAULT_FILENAME
 
   if @students.count > 0
-    File.open(filename, "w") do |file|
+    CSV.open(filename, "w") do |csv_object|
       @students.each do |student|
-        student_data = get_student_data(student)
-        csv_line = student_data.values.join(',')
-        file.puts csv_line
+        csv_object << get_student_data(student).values
       end
     end
     puts "Students saved!" #
@@ -200,13 +202,7 @@ def load_students(loading_type = :default)
 
   if File.exist?(filename)
     @students = []
-    File.open(filename, "r") do |file|
-      file.readlines.each do |line|
-        name, cohort, hobbies_text, height, country = line.chomp.split(',')
-        hobbies = hobbies_text.split('/')
-        add_student(name, cohort, hobbies, country, height)
-      end
-    end
+    CSV.foreach(filename) { |line| add_student(line) }
     puts "Students loaded!" #
   else
     puts "ERROR: file #{filename} not found!"
