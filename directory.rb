@@ -1,6 +1,7 @@
 # program that can load, save, input and print students data
 @students = []
 @max_chars = {}
+DEFAULT_FILENAME = "students.csv"
 
 def print_header
   puts
@@ -171,10 +172,18 @@ def get_student_data(student)
   student_data
 end
 
-def save_students
+def get_filename
+  puts "Enter a filename:"
+  $stdin.gets.chomp.strip
+end
+
+def save_students(saving_type = :default)
+
+  filename = (saving_type == :new) ? get_filename : DEFAULT_FILENAME
+
   if @students.count > 0
     # open the file for writing
-    file = File.open("students.csv", "w")
+    file = File.open(filename, "w")
 
     @students.each do |student|
       student_data = get_student_data(student)
@@ -189,7 +198,9 @@ def save_students
   end
 end
 
-def load_students(filename="students.csv")
+def load_students(loading_type = :default)
+  filename = (loading_type == :new) ? get_filename : DEFAULT_FILENAME
+
   if File.exist?(filename)
     @students = []
     file = File.open(filename, "r")
@@ -221,8 +232,10 @@ def print_menu
   print_line
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to #{DEFAULT_FILENAME}"
+  puts "4. Load the list from #{DEFAULT_FILENAME}"
+  puts "5. Save the list to a new file"
+  puts "6. Load the list from a chosen file"
   puts "9. Exit" # 9 because we'll be adding more items
 end
 
@@ -236,6 +249,10 @@ def process(selection)
     save_students
   when "4"
     load_students
+  when "5"
+    save_students(:new)
+  when "6"
+    load_students(:new)
   when "9"
     exit
   else
